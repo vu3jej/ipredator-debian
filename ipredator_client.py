@@ -34,10 +34,10 @@ SOFTWARE.
 '''
 
 import apt
+import subprocess
 import argparse
 import shutil
 import os.path
-from subprocess import call, check_call
 
 def configure_client():
     cache = apt.Cache()
@@ -47,8 +47,8 @@ def configure_client():
     else:
         # Oopsie! OpenVPN client is not installed! Let's get on with it, shall we?
         try:
-            check_call(["apt-get", "--assume-yes", "install", "openvpn"])
-        except calledProcessError as e:
+            subprocess.check_call(["apt-get", "--assume-yes", "install", "openvpn"])
+        except subprocess.CalledProcessError as e:
             print "Installation failed:", e
 
     parser = argparse.ArgumentParser(description = "Accepting source & destination arguments from commandline")
@@ -73,18 +73,18 @@ def configure_client():
     # Creating /etc/openvpn/IPredator.auth file & appending credentials to it
     
     try:
-        check_call(["touch", "/etc/openvpn/IPredator.auth"])
-    except calledProcessError as e:
+        subprocess.check_call(["touch", "/etc/openvpn/IPredator.auth"])
+    except subprocess.CalledProcessError as e:
         print e
 
     with open('/etc/openvpn/IPredator.auth', 'w') as authFile:
         authFile.write(args.user + '\n') 
         authFile.write(args.password)
 
-    call(['chown', 'root:root', '/etc/openvpn/IPredator-CLI-Password.conf'])
-    call(['chown', 'root:root', '/etc/openvpn/IPredator.auth'])
-    call(['chmod', '400', '/etc/openvpn/IPredator-CLI-Password.conf'])
-    call(['chmod', '400', '/etc/openvpn/IPredator.auth'])
+    subprocess.call(['chown', 'root:root', '/etc/openvpn/IPredator-CLI-Password.conf'])
+    subprocess.call(['chown', 'root:root', '/etc/openvpn/IPredator.auth'])
+    subprocess.call(['chmod', '400', '/etc/openvpn/IPredator-CLI-Password.conf'])
+    subprocess.call(['chmod', '400', '/etc/openvpn/IPredator.auth'])
     
 if __name__ == "__main__":
     configure_client()
