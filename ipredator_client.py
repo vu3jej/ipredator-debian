@@ -4,9 +4,9 @@
 Author: Jithesh E J
 E-mail: mail@jithe.sh
 Created: 01/01/2015
-Usage: sudo ipredator_client.py /source/path/filename -d /destination/path username password
-    ipredator_client.py -h for help
-    The script assumes you have already downloaded the configuration files 
+Usage: sudo ./ipredator_client.py /home/hogwarts/Downloads/IPredator-CLI-Password.conf username password
+    ./ipredator_client.py --help for help.
+Requirements: The script assumes you have already downloaded the configuration files
     from https://www.ipredator.se/guide/openvpn/debian/native#needed_files & the configuration
     is based on https://www.ipredator.se/guide/openvpn/debian/native
 
@@ -65,6 +65,9 @@ def configure_client():
         shutil.copy(args.source, args.destination)
     except IOError as e:
         print e
+
+    # Check if update-resolv-conf exists and if it does, append few lines to IPredator-CLI-Password.conf
+
     if os.path.isfile(args.destination + '/update-resolv-conf'):
         dns_conf = 'script-security 2\nup /etc/openvpn/update-resolv-conf\ndown /etc/openvpn/update-resolv-conf'
         with open(args.destination + '/IPredator-CLI-Password.conf', 'a') as confFile:
